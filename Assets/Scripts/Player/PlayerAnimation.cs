@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Animator))]
-public class AnimateHandController : MonoBehaviour
+public class PlayerAnimation : MonoBehaviour
 {
     public InputActionReference gripInputActionReference;
     public InputActionReference triggerInputActionReference;
@@ -16,8 +16,6 @@ public class AnimateHandController : MonoBehaviour
     private void Awake()
     {
         handAnimator = GetComponent<Animator>();
-
-
     }
 
     // Start is called before the first frame update
@@ -30,8 +28,8 @@ public class AnimateHandController : MonoBehaviour
     
     void Update()
     {
-        gripInputActionReference.action.performed += _ => AnimateGrip();
-        triggerInputActionReference.action.performed += _ => AnimateTrigger();
+        AnimateGrip();
+        AnimateTrigger();
     }
 
     private void AnimateGrip()
