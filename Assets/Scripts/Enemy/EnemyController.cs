@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        anim.SetFloat("Speed", speed);
+        anim.SetFloat("Speed", Mathf.Abs(speed));
         
         Vector3 pos = transform.position;
         pos.x += speed * Time.deltaTime;
