@@ -13,6 +13,8 @@ public class GunController : MonoBehaviour
     private Transform bulletSpawnPoint;
     [SerializeField]
     private GameObject holdingHand;
+    [SerializeField]
+    private ParticleSystem muzzleFlash;
     private PlayerController playerController;
 
     [Header("Gun Settings")]
@@ -46,13 +48,17 @@ public class GunController : MonoBehaviour
                 Shoot();
                 nextShootTime = Time.time + 1f / shootingRate; // Calculate the next allowed shoot time
             }
-            
+
         }
 
     }
 
     void Shoot()
     {
+        if (muzzleFlash != null)
+        {
+            muzzleFlash.Play();
+        }
         if (grabInteractable.isSelected)
         {
             var interactor = grabInteractable.firstInteractorSelecting as XRBaseInteractor;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class EnemyController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class EnemyController : MonoBehaviour
     private float leftAndRightEdge = 8f;
     [SerializeField]
     private float changeDirInterval = 2f; // Time interval for changing direction
+    [SerializeField]
+    private bool startMoving = false;
     private float timeSinceLastDirChange;
     private Animator anim;
     void Awake()
@@ -26,6 +29,12 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        if(!startMoving) 
+        {
+            anim.SetFloat("Speed", 0f);
+            return;
+        }
+
         anim.SetFloat("Speed", Mathf.Abs(speed));
         
         Vector3 pos = transform.position;
@@ -55,5 +64,15 @@ public class EnemyController : MonoBehaviour
     {
         // Randomly change direction
         speed *= -1;
+    }
+
+    public void StartMoving()
+    {
+        startMoving = !startMoving;
+    }
+
+    public void SetSpeedZero()
+    {
+        speed = 0f;
     }
 }

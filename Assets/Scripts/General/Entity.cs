@@ -42,7 +42,7 @@ public class Entity : MonoBehaviour
         other.GetComponent<Entity>()?.TakeDamage(this);
     }
 
-    void Die()
+    protected virtual void Die()
     {
         Destroy(gameObject);
     }
