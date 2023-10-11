@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class SimpleShoot : MonoBehaviour
 {
@@ -15,12 +14,35 @@ public class SimpleShoot : MonoBehaviour
     [SerializeField] private Transform casingExitLocation;
 
     [Header("Settings")]
-    [Tooltip("Specify time to destory the casing object")] [SerializeField] private float destroyTimer = 2f;
-    [Tooltip("Bullet Speed")] [SerializeField] private float shotPower = 500f;
-    [Tooltip("Casing Ejection Speed")] [SerializeField] private float ejectPower = 150f;
+    [Tooltip("Specify time to destory the casing object")][SerializeField] private float destroyTimer = 2f;
+    [Tooltip("Bullet Speed")][SerializeField] private float shotPower = 500f;
+    [Tooltip("Casing Ejection Speed")][SerializeField] private float ejectPower = 150f;
 
+    [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip reloadSound;
+    [SerializeField] private AudioClip noAmmoSound;
+
+    [Header("Magazine")]
+    [SerializeField] private Magazine magazine;
+    [SerializeField] private GameObject magazineObject;
+    [SerializeField] private XRBaseInteractor magazineInteractor;
+
+    private bool hasReloadSlide = true;
+
+    void Awake()
+    {
+        magazineInteractor = magazineObject.GetComponentInChildren<XRSocketInteractor>();
+
+        if (magazineInteractor == null)
+            magazineInteractor = GetComponentInChildren<XRSocketInteractor>();
+
+        magazineInteractor.selectEntered.AddListener(AddMagazine);
+        magazineInteractor.selectExited.AddListener(RemoveMagazine);
+
+    }
+
     void Start()
     {
         if (barrelLocation == null)
@@ -28,11 +50,21 @@ public class SimpleShoot : MonoBehaviour
 
         if (gunAnimator == null)
             gunAnimator = GetComponentInChildren<Animator>();
+
+        if (magazine == null)
+            magazine = magazineInteractor.GetOldestInteractableSelected().transform.GetComponent<Magazine>();
     }
 
     public void PullTrigger()
     {
-        gunAnimator.SetTrigger("Fire");
+        if (magazine && magazine.GetAmmoCount() > 0 && hasReloadSlide)
+        {
+            gunAnimator.SetTrigger("Fire");
+        }
+        else
+        {
+            audioSource.PlayOneShot(noAmmoSound);
+        }
     }
 
 
@@ -41,7 +73,10 @@ public class SimpleShoot : MonoBehaviour
     {
         // play shoot sound
         audioSource.PlayOneShot(shootSound);
-        
+
+        // decrease ammo count
+        magazine.RemoveAmmo(1);
+
         if (muzzleFlashPrefab)
         {
             //Create the muzzle flash
@@ -78,6 +113,26 @@ public class SimpleShoot : MonoBehaviour
 
         //Destroy casing after X seconds
         Destroy(tempCasing, destroyTimer);
+    }
+
+    void AddMagazine(SelectEnterEventArgs context)
+    {
+        // magazineInteractor.GetOldestInteractableSelected();
+        magazine = magazineInteractor.GetOldestInteractableSelected().transform.GetComponent<Magazine>();
+        audioSource.PlayOneShot(reloadSound);
+        hasReloadSlide = false;
+    }
+
+    void RemoveMagazine(SelectExitEventArgs context)
+    {
+        magazine = null;
+        audioSource.PlayOneShot(reloadSound);
+    }
+
+    public void ReloadSlide()
+    {
+        hasReloadSlide = true;
+        audioSource.PlayOneShot(reloadSound);
     }
 
 }
