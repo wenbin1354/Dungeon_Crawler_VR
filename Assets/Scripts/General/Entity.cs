@@ -19,14 +19,14 @@ public class Entity : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(Entity attacker)
+    public void TakeDamage(Entity _attacker)
     {
 
-        if (currentHealth - attacker.damage > 0)
+        if (currentHealth - _attacker.damage > 0)
         {
-            currentHealth -= attacker.damage;
+            currentHealth -= _attacker.damage;
             // damaged animation
-            OnTakeDamage?.Invoke(attacker.transform);
+            OnTakeDamage?.Invoke(_attacker.transform);
             // Debug.Log("Took Damage");
         }
         else
@@ -37,9 +37,9 @@ public class Entity : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider _other)
     {
-        other.GetComponent<Entity>()?.TakeDamage(this);
+        _other.GetComponent<Entity>()?.TakeDamage(this);
     }
 
     protected virtual void Die()
