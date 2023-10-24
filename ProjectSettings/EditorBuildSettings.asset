@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/William-Scene.unity
+    guid: 723584e6d42a92645b3b1350d83c1d76
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4074f037fff78a84990a4839daa5c157,
       type: 2}
