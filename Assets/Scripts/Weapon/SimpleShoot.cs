@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class SimpleShoot : MonoBehaviour
@@ -26,14 +28,14 @@ public class SimpleShoot : MonoBehaviour
 
     [Header("Magazine")]
     [SerializeField] private Magazine magazine;
-    [SerializeField] private GameObject magazineObject;
+    [SerializeField] private GameObject magazineLocation;
     [SerializeField] private XRBaseInteractor magazineInteractor;
 
     private bool hasReloadSlide = true;
 
     void Awake()
     {
-        magazineInteractor = magazineObject.GetComponentInChildren<XRSocketInteractor>();
+        magazineInteractor = magazineLocation.GetComponentInChildren<XRSocketInteractor>();
 
         if (magazineInteractor == null)
             magazineInteractor = GetComponentInChildren<XRSocketInteractor>();
