@@ -11,10 +11,13 @@ public class EnemyBehavior : MonoBehaviour
 
     public LayerMask whatIsGround, whatIsPlayer;
 
+    public float speed;
+
     //Patrol Values
     public Vector3 walkPoint;
     bool walkPointSet;
     public float walkPointRange;
+    public int timeBetweenPatrols;
 
     //Attack Values
     public float timeBetweenAttacks;
@@ -24,16 +27,27 @@ public class EnemyBehavior : MonoBehaviour
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
+    //Animation controls
+    private Animator animator;
+    public bool isAttacking;
+    public bool isHit;
+    public int attackPattern;
+
+    //Game controls
+    public int maxHealth, currentHealth, lightDamage, heavyDamage;
+    public bool staggered;
+
     private void Awake()
     {
-        player = GameObject.Find("XRManager").transform;
+        player = GameObject.Find("Camera Offset").transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
+        currentHealth = maxHealth;
     }
 
     // Update is called once per frame
@@ -41,16 +55,84 @@ public class EnemyBehavior : MonoBehaviour
     {
         //Check ranges
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+        //playerInSightRange = Mathf.Abs((player.position - transform.position).magnitude) < sightRange;
+        
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        //playerInSightRange = Mathf.Abs((player.position - transform.position).magnitude) < attackRange;
 
-        if (!playerInSightRange && !playerInAttackRange) Patrol();
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        //float distanceFromPlayer = Mathf.Abs((player.position - transform.position).magnitude);
 
+        if(currentHealth > 0 && staggered == false)
+        {
+            if (!playerInSightRange && !playerInAttackRange) Patrol();
+            if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+            if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        }
+        else if(currentHealth > 0 && staggered == true)
+        {
+            agent.destination = transform.position;
+        }
+        else
+        {
+            kill();
+        }
+        
+
+        //isHit = true;
+
+        //Update Anims
+        if (!(playerInSightRange && playerInAttackRange))
+            attackPattern = 0;
+        animator.SetInteger("Attack", attackPattern);
+        speed = agent.velocity.magnitude;
+        animator.SetFloat("Velocity", agent.velocity.magnitude);
+        if (isHit == true)
+        {
+            animator.SetBool("isHit", true);
+            Invoke(nameof(resetHit), 1);
+        }
+        else
+        {
+            animator.SetBool("isHit", false);
+        }
+        if (currentHealth <= 0)
+        {
+            kill();
+        }
+        
+
+    }
+
+    void resetHit()
+    {
+        isHit = false;
+    }
+
+    void resetStaggered()
+    {
+        staggered = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "playerAttack")
+        {
+            isHit = true;
+            currentHealth -= 10;
+            if (currentHealth <= 0)
+            {
+                kill();
+            }
+            staggered = true;
+            Invoke(nameof(resetStaggered), 1);
+        }
     }
 
     private void Patrol()
     {
+
+
+        agent.speed = 1;
         if (!walkPointSet) SearchWalkPoint();
 
         if (walkPointSet) agent.SetDestination(walkPoint);
@@ -60,8 +142,15 @@ public class EnemyBehavior : MonoBehaviour
         //Destination reached
         if(distanceToWalkPoint.magnitude < 1f)
         {
-            walkPointSet = false;
+            Invoke(nameof(ResetWalkpoint), timeBetweenPatrols);
         }
+
+
+    }
+
+    private void ResetWalkpoint()
+    {
+        walkPointSet = false;
     }
 
     private void SearchWalkPoint()
@@ -79,6 +168,7 @@ public class EnemyBehavior : MonoBehaviour
 
     private void ChasePlayer()
     {
+        agent.speed = 2;
         agent.SetDestination(player.position);
     }
 
@@ -90,7 +180,10 @@ public class EnemyBehavior : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-
+            transform.LookAt(player);
+            attackPattern = 1;
+            animator.SetInteger("Attack", attackPattern);
+            Invoke(nameof(ResetStance), float.Parse(".5"));
             //Attack code here
 
             ///
@@ -100,8 +193,20 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
+    private void ResetStance()
+    {
+        attackPattern = 0;
+    }
+
     private void ResetAttack()
     {
         alreadyAttacked = false;
+        attackPattern = 0;
+    }
+
+    private void kill()
+    {
+        agent.SetDestination(transform.position);
+        animator.SetBool("isDead", true);
     }
 }
