@@ -7,14 +7,10 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField]
-    private float speed = 1f;
-    [SerializeField]
-    private float leftAndRightEdge = 8f;
-    [SerializeField]
-    private float changeDirInterval = 2f; // Time interval for changing direction
-    [SerializeField]
-    private bool startMoving = false;
+    [SerializeField] private float speed = 1f;
+    [SerializeField] private float leftAndRightEdge = 8f;
+    [SerializeField] private float changeDirInterval = 2f; // Time interval for changing direction
+    [SerializeField] private bool startMoving = false;
     private float timeSinceLastDirChange;
     private Animator anim;
     void Awake()
@@ -29,14 +25,14 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        if(!startMoving) 
+        if (!startMoving)
         {
             anim.SetFloat("Speed", 0f);
             return;
         }
 
         anim.SetFloat("Speed", Mathf.Abs(speed));
-        
+
         Vector3 pos = transform.position;
         pos.x += speed * Time.deltaTime;
         transform.position = pos;

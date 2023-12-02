@@ -1,73 +1,153 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class GunController : MonoBehaviour
+public class SimpleShoot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField]
-    private GameObject bulletPrefab;
-    [SerializeField]
-    private Transform bulletSpawnPoint;
-    [SerializeField]
-    private GameObject holdingHand;
-    [SerializeField]
-    private ParticleSystem muzzleFlash;
-    private PlayerController playerController;
+    [Header("Prefab Refrences")]
+    public GameObject bulletPrefab;
+    public GameObject casingPrefab;
+    public GameObject muzzleFlashPrefab;
 
-    [Header("Gun Settings")]
-    [SerializeField]
-    private float bulletSpeed = 500f;
-    [SerializeField]
-    private float shootingRate = 0.5f; // Controls the shooting rate in bullets per second
-    private float nextShootTime; // Used to control the shooting rate
-    [SerializeField]
-    private bool enableContinuouslyShooting = true;
+    [Header("Location Refrences")]
+    [SerializeField] private Animator gunAnimator;
+    [SerializeField] private Transform barrelLocation;
+    [SerializeField] private Transform casingExitLocation;
 
-    private XRGrabInteractable grabInteractable;
-    private void Awake()
+    [Header("Settings")]
+    [Tooltip("Specify time to destory the casing object")][SerializeField] private float destroyTimer = 2f;
+    [SerializeField] private float bulletDamageMultiplier = 1f;
+    [Tooltip("Bullet Speed")][SerializeField] private float shotPower = 500f;
+    [Tooltip("Casing Ejection Speed")][SerializeField] private float ejectPower = 150f;
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip reloadSound;
+    [SerializeField] private AudioClip noAmmoSound;
+
+    [Header("Magazine")]
+    [SerializeField] private Magazine magazine;
+    [SerializeField] private GameObject magazineLocation;
+    [SerializeField] private XRBaseInteractor magazineInteractor;
+
+    [Header("Reload Slide")]
+    [SerializeField] private bool hasReloadSlide = true;
+
+    void Awake()
     {
-        playerController = holdingHand.GetComponent<PlayerController>();
-        grabInteractable = GetComponent<XRGrabInteractable>();
+        magazineInteractor = magazineLocation.GetComponentInChildren<XRSocketInteractor>();
+
+        if (magazineInteractor == null)
+            magazineInteractor = GetComponentInChildren<XRSocketInteractor>();
+
+        magazineInteractor.selectEntered.AddListener(AddMagazine);
+        magazineInteractor.selectExited.AddListener(RemoveMagazine);
+
     }
+
     void Start()
     {
+        if (barrelLocation == null)
+            barrelLocation = transform;
 
+        if (gunAnimator == null)
+            gunAnimator = GetComponentInChildren<Animator>();
+
+        if (magazine == null)
+            magazine = magazineInteractor.GetOldestInteractableSelected().transform.GetComponent<Magazine>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PullTrigger()
     {
-
-        if (playerController != null && playerController.isShooting)
+        if (magazine && magazine.GetAmmoCount() > 0 && hasReloadSlide)
         {
-            if (enableContinuouslyShooting && Time.time >= nextShootTime)
-            {
-                Shoot();
-                nextShootTime = Time.time + 1f / shootingRate; // Calculate the next allowed shoot time
-            }
-
+            gunAnimator.SetTrigger("Fire");
         }
-
+        else
+        {
+            audioSource.PlayOneShot(noAmmoSound);
+        }
     }
 
+
+    //This function creates the bullet behavior
     void Shoot()
     {
-        if (muzzleFlash != null)
+        // play shoot sound
+        audioSource.PlayOneShot(shootSound);
+
+        // decrease ammo count
+        magazine.RemoveAmmo(1);
+
+        if (muzzleFlashPrefab)
         {
-            muzzleFlash.Play();
+            //Create the muzzle flash
+            GameObject tempFlash;
+            tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);
+
+            //Destroy the muzzle flash effect
+            Destroy(tempFlash, destroyTimer);
         }
-        if (grabInteractable.isSelected)
-        {
-            var interactor = grabInteractable.firstInteractorSelecting as XRBaseInteractor;
-            if (interactor != null)
-            {
-                var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-                bullet.GetComponent<Rigidbody>().AddForce(bulletSpawnPoint.forward * bulletSpeed);
-                Destroy(bullet, 2f);
-            }
-        }
+
+        //cancels if there's no bullet prefeb
+        if (!bulletPrefab)
+        { return; }
+
+        // Create a bullet and add force on it in direction of the barrel
+        GameObject bullet = Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation);
+        // Bullet instantiatedBullet = bullet.GetComponent<Bullet>();
+        // instantiatedBullet.bulletDamageMultiplier = bulletDamageMultiplier;
+        bullet.GetComponent<Bullet>().bulletDamageMultiplier = bulletDamageMultiplier;
+        // bullet.GetComponent<Bullet>().EnableTrail();
+        bullet.GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
+        // instantiatedBullet.EnableTrail();
     }
+
+    //This function creates a casing at the ejection slot
+    void CasingRelease()
+    {
+        //Cancels function if ejection slot hasn't been set or there's no casing
+        if (!casingExitLocation || !casingPrefab)
+        { return; }
+
+        //Create the casing
+        GameObject tempCasing;
+        tempCasing = Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation) as GameObject;
+        //Add force on casing to push it out
+        tempCasing.GetComponent<Rigidbody>().AddExplosionForce(Random.Range(ejectPower * 0.7f, ejectPower), (casingExitLocation.position - casingExitLocation.right * 0.3f - casingExitLocation.up * 0.6f), 1f);
+        //Add torque to make casing spin in random direction
+        tempCasing.GetComponent<Rigidbody>().AddTorque(new Vector3(0, Random.Range(100f, 500f), Random.Range(100f, 1000f)), ForceMode.Impulse);
+
+        //Destroy casing after X seconds
+        Destroy(tempCasing, destroyTimer);
+    }
+
+    void AddMagazine(SelectEnterEventArgs context)
+    {
+        // magazineInteractor.GetOldestInteractableSelected();
+        magazine = magazineInteractor.GetOldestInteractableSelected().transform.GetComponent<Magazine>();
+        audioSource.PlayOneShot(reloadSound);
+        hasReloadSlide = false;
+    }
+
+    void RemoveMagazine(SelectExitEventArgs context)
+    {
+        magazine = null;
+        audioSource.PlayOneShot(reloadSound);
+    }
+
+    public void ReloadSlide()
+    {
+        hasReloadSlide = true;
+        audioSource.PlayOneShot(reloadSound);
+    }
+
+    public void RevertDamageMultiplierAndSpeed()
+    {
+        bulletDamageMultiplier = (bulletDamageMultiplier == 1f) ? 1.5f : 1f;
+        shotPower = (shotPower == 500f) ? 750f : 500f;
+    }
+
 }
