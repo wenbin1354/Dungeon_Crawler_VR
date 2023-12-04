@@ -277,6 +277,8 @@ MonoBehaviour:
   ammoCount: 8
   magazineWithAmmo: {fileID: 6512230508179069119}
   magazineWithNoAmmo: {fileID: 5250495990469690012}
+  bulletPrefab: {fileID: 6804990658058999119, guid: 65c9f6563c561ee4e8905d1e6a32548b,
+    type: 3}
 --- !u!1 &4009621567146276327
 GameObject:
   m_ObjectHideFlags: 0
