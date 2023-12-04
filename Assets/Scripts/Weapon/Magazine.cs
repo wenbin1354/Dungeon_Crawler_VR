@@ -7,6 +7,7 @@ public class Magazine : MonoBehaviour
     [SerializeField] private int ammoCount;
     [SerializeField] private GameObject magazineWithAmmo;
     [SerializeField] private GameObject magazineWithNoAmmo;
+    [SerializeField] private GameObject bulletPrefab;
 
     private void Start()
     {
@@ -49,5 +50,10 @@ public class Magazine : MonoBehaviour
             magazineWithAmmo.SetActive(false);
             magazineWithNoAmmo.SetActive(true);
         }
+    }
+
+    public GameObject GetBulletPrefab()
+    {
+        return bulletPrefab;
     }
 }

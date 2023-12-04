@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
 {
     public float bulletDamage = 10f;
     public float bulletDamageMultiplier = 1f;
-    public TrailRenderer trailRenderer;
+    private TrailRenderer trailRenderer;
     public float trailDuration = 0.2f; // Adjust as needed
 
     private void Awake()
@@ -43,14 +43,4 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    // public void EnableTrail()
-    // {
-    //     // Enable the Trail Renderer when the bullet is shot
-    //     if (trailRenderer != null)
-    //     {
-    //         Debug.Log("Enabling Trail");
-    //         trailRenderer.emitting = true;
-    //         // StartCoroutine(DisableTrailAfterDuration(trailDuration));
-    //     }
-    // }
 }

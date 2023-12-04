@@ -6,9 +6,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class SimpleShoot : MonoBehaviour
 {
     [Header("Prefab Refrences")]
-    public GameObject bulletPrefab;
     public GameObject casingPrefab;
     public GameObject muzzleFlashPrefab;
+    public Transform enemyTransform;
 
     [Header("Location Refrences")]
     [SerializeField] private Animator gunAnimator;
@@ -75,6 +75,7 @@ public class SimpleShoot : MonoBehaviour
     //This function creates the bullet behavior
     void Shoot()
     {
+        GameObject bulletPrefab = magazine.GetBulletPrefab();
         // play shoot sound
         audioSource.PlayOneShot(shootSound);
 
@@ -97,12 +98,8 @@ public class SimpleShoot : MonoBehaviour
 
         // Create a bullet and add force on it in direction of the barrel
         GameObject bullet = Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation);
-        // Bullet instantiatedBullet = bullet.GetComponent<Bullet>();
-        // instantiatedBullet.bulletDamageMultiplier = bulletDamageMultiplier;
         bullet.GetComponent<Bullet>().bulletDamageMultiplier = bulletDamageMultiplier;
-        // bullet.GetComponent<Bullet>().EnableTrail();
         bullet.GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
-        // instantiatedBullet.EnableTrail();
     }
 
     //This function creates a casing at the ejection slot
