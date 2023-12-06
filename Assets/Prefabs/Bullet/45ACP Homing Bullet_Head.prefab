@@ -360,4 +360,4 @@ MonoBehaviour:
   bulletDamage: 10
   bulletDamageMultiplier: 1
   trailDuration: 0.2
-  turnPower: 100
+  turnPower: 300
