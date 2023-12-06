@@ -8,6 +8,10 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private Slider slider;
     [SerializeField] private Camera cam;
     // [SerializeField] private Transform target;
+    private void Start() {
+        slider = GetComponent<Slider>();
+        cam = Camera.main;
+    }
 
     // Update is called once per frame
     void Update()

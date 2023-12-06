@@ -25,7 +25,5 @@ public class Skeleton : Entity
         base.TakeBulletDamage(_bullet);
         // play on hit sound audio clip
         audioSource.PlayOneShot(onHitSound);
-        // move back a bit base on bullet direction
-        transform.position -= _bullet.transform.forward * 0.1f;
     }
 }

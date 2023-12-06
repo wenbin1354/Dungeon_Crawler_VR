@@ -144,7 +144,7 @@ public class SimpleShoot : MonoBehaviour
     public void RevertDamageMultiplierAndSpeed()
     {
         bulletDamageMultiplier = (bulletDamageMultiplier == 1f) ? 1.5f : 1f;
-        shotPower = (shotPower == 500f) ? 750f : 500f;
+        shotPower = (shotPower == 1000f) ? 1500f : 1000f;
     }
 
 }
