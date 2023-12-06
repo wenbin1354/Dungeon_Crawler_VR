@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3051420126590710743}
   - component: {fileID: 4021184843820773658}
   - component: {fileID: 9167977309671080028}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 45ACP Casing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3812730473335392958}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: UCP45 Homing Bullet Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 2
+  m_MovementType: 0
   m_VelocityDamping: 1
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
@@ -339,7 +339,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5602041534717069431}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 45ACP Bullet_Casing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -371,7 +371,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4747190067400681829}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 45ACP Bullet_Full
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -510,7 +510,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2223905958416687651}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 45ACP Homing Bullet_Full
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -543,7 +543,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2696710956932353490}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: M1911 Magazine_Silver_Full
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -577,7 +577,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2874517075325345734}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 45ACP Bullet_Casing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -611,7 +611,7 @@ GameObject:
   - component: {fileID: 3150235930402641900}
   - component: {fileID: 8758406110978807711}
   - component: {fileID: 4778625662663619223}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 45ACP Casing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -692,7 +692,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3508459468642773777}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: UCP45 Bullet Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -726,7 +726,7 @@ GameObject:
   - component: {fileID: 1106426585747277268}
   - component: {fileID: 5234301824080858703}
   - component: {fileID: 52847894056571871}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pistol_45ACP_Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -810,7 +810,7 @@ GameObject:
   - component: {fileID: 8706719621781515980}
   - component: {fileID: 6517831900213012892}
   - component: {fileID: 5477177777314283161}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: M1911 Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -915,7 +915,7 @@ GameObject:
   - component: {fileID: 8428845141259571251}
   - component: {fileID: 8596613153465159151}
   - component: {fileID: 7567873021348309318}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pistol_45ACP_Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

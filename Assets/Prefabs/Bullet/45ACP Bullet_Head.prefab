@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6291989069644143154}
   - component: {fileID: 8165564615350608013}
   - component: {fileID: 7667026902598471980}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pistol_45ACP_Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3789101381138087726}
   - component: {fileID: 5343793623669591096}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -241,6 +241,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: 45ACP Bullet_Head
       objectReference: {fileID: 0}
+    - target: {fileID: 3625037896966406280, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 8535412081993147290, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb,
         type: 3}
       propertyPath: m_RootOrder
@@ -354,5 +359,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletDamage: 10
   bulletDamageMultiplier: 1
-  trailRenderer: {fileID: 0}
   trailDuration: 0.2

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2157155839523302452}
   - component: {fileID: 5976232766478256651}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 6229445436509072577}
   - component: {fileID: 4108900050713353735}
   - component: {fileID: 7480185022413102925}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pistol_45ACP_Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,6 +240,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: 45ACP Homing Bullet_Head
+      objectReference: {fileID: 0}
+    - target: {fileID: 3625037896966406280, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8535412081993147290, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb,
         type: 3}
