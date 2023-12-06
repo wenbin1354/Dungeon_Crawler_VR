@@ -37,6 +37,9 @@ public class EnemyBehavior : MonoBehaviour
     public int maxHealth, currentHealth, lightDamage, heavyDamage;
     public bool staggered;
 
+    //Enemy Types
+    public string enemyType;
+
     private void Awake()
     {
         player = GameObject.Find("Camera Offset").transform;
@@ -65,8 +68,10 @@ public class EnemyBehavior : MonoBehaviour
         if(currentHealth > 0 && staggered == false)
         {
             if (!playerInSightRange && !playerInAttackRange) Patrol();
-            if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-            if (playerInSightRange && playerInAttackRange) AttackPlayer();
+            if (playerInSightRange && !playerInAttackRange && enemyType == "Ghost") GhostCharge();
+            if (playerInSightRange && !playerInAttackRange && enemyType != "Ghost") ChasePlayer();
+            if (playerInSightRange && playerInAttackRange && enemyType == "Mummy") MummyAttack();
+            if (playerInSightRange && playerInAttackRange && enemyType != "Mummy") AttackPlayer();
         }
         else if(currentHealth > 0 && staggered == true)
         {
@@ -185,7 +190,10 @@ public class EnemyBehavior : MonoBehaviour
             animator.SetInteger("Attack", attackPattern);
             Invoke(nameof(ResetStance), float.Parse(".5"));
             //Attack code here
+            if(Physics.CheckSphere(transform.position, attackRange, whatIsPlayer))
+            {
 
+            }
             ///
 
             alreadyAttacked = true;
@@ -208,5 +216,22 @@ public class EnemyBehavior : MonoBehaviour
     {
         agent.SetDestination(transform.position);
         animator.SetBool("isDead", true);
+    }
+
+    private void GhostCharge()
+    {
+        agent.speed += 1;
+        agent.SetDestination(player.position);
+        if(transform.position == player.position)
+        {
+            //Deal damage
+            kill();
+        }
+    }
+
+    private void MummyAttack()
+    {
+        //Create rock
+        animator.SetBool("isThrowing", true);
     }
 }
