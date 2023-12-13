@@ -7,63 +7,35 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField]
-    private float speed = 1f;
-    [SerializeField]
-    private float leftAndRightEdge = 8f;
-    [SerializeField]
-    private float changeDirInterval = 2f; // Time interval for changing direction
-    [SerializeField]
-    private bool startMoving = false;
-    private float timeSinceLastDirChange;
+    [SerializeField] private float speed = 1f;
+    [SerializeField] private bool startMoving = false;
     private Animator anim;
+    private Transform player; // Reference to the player's transform
+
     void Awake()
     {
         anim = GetComponent<Animator>();
-    }
-    void Start()
-    {
-        // Initialize the timer
-        timeSinceLastDirChange = 0f;
+        player = GameObject.FindGameObjectWithTag("Player").transform; // Assuming the player has the "Player" tag
     }
 
     void Update()
     {
-        if(!startMoving) 
+        if (!startMoving)
         {
             anim.SetFloat("Speed", 0f);
             return;
         }
 
+        // Calculate the direction from the enemy to the player
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+
+        // Move the enemy toward the player
+        transform.Translate(directionToPlayer * speed * Time.deltaTime, Space.World);
+
+        // Rotate the enemy to face the player (optional)
+        transform.LookAt(player);
+
         anim.SetFloat("Speed", Mathf.Abs(speed));
-        
-        Vector3 pos = transform.position;
-        pos.x += speed * Time.deltaTime;
-        transform.position = pos;
-
-        // Changing direction based on time interval
-        timeSinceLastDirChange += Time.deltaTime;
-        if (timeSinceLastDirChange >= changeDirInterval)
-        {
-            ChangeDirection();
-            timeSinceLastDirChange = 0f; // Reset the timer
-        }
-
-        // Check left and right edges
-        if (pos.x < -leftAndRightEdge)
-        {
-            speed = Mathf.Abs(speed); // Move right
-        }
-        else if (pos.x > leftAndRightEdge)
-        {
-            speed = -Mathf.Abs(speed); // Move left
-        }
-    }
-
-    void ChangeDirection()
-    {
-        // Randomly change direction
-        speed *= -1;
     }
 
     public void StartMoving()

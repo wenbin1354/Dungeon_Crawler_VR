@@ -41,5 +41,18 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
             if (m_Text != null)
                 m_Text.text = m_Count.ToString();
         }
+
+        public void ChangeTextBool()
+        {
+            if (m_Text.text == "True")
+            {
+                m_Text.text = "False";
+            }
+            else
+            {
+                m_Text.text = "True";
+            }
+                 
+        }
     }
 }
